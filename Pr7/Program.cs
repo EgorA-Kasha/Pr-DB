@@ -116,7 +116,7 @@ namespace Pr7
 
         static void Main(string[] args)
         {
-            
+
         }
     }
 }
