@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="1910c4b3ab29494592b23af5532cf634" Name="Diagram1">
+        <EntityTypeShape EntityType="eirineirinModel.Orders" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="eirineirinModel.OrdersTowarys" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="eirineirinModel.Pvz" Width="1.5" PointX="0.75" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="eirineirinModel.sysdiagrams" Width="1.5" PointX="5.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="eirineirinModel.Towary" Width="1.5" PointX="3" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="eirineirinModel.Users" Width="1.5" PointX="0.75" PointY="5.25" IsExpanded="true" />
+        <AssociationConnector Association="eirineirinModel.FK_Orders_Pvz" ManuallyRouted="false" />
+        <AssociationConnector Association="eirineirinModel.FK_Orders_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="eirineirinModel.FK_OrdersTowarys_Orders" ManuallyRouted="false" />
+        <AssociationConnector Association="eirineirinModel.FK_OrdersTowarys_Towary" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
