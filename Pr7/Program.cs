@@ -8,180 +8,110 @@ using System.Threading.Tasks;
 
 namespace Pr7
 {
-    class User
+    class Warehouse
     {
-        public static Users RegisterLogin(string username, string password, bool login)
+        public static string PrintAll()
         {
-            if (!login)
-            {
-                Core.Context.Users.Add(new Users { username = username, passwd = password });
-                Core.Context.SaveChanges();
-            }
-            return (from user in Core.Context.Users where user.username == username select user).First();
+            return "\tСклад\nНумер\tНазвание\tЦена\tКол-во\tДо доставки\n" +
+            string.Join("\n", Core.Context.Part.ToList().Select(x => $"{x.id}\t{x.name}\t{x.price}\t{x.count}")) + "\n" +
+            string.Join("\n", (
+                from x in Core.Context.PartPending
+                join part in Core.Context.Part
+                on x.id_part equals part.id
+                where x.time_remains != 0
+                select new { part, x }
+            ).ToList().Select(xx => $"{xx.part.id}\t{xx.part.name}\t{xx.part.price}\t{xx.x.count}\t{xx.x.time_remains}"));
         }
-    }
+        public static Part RandomPart()
+        {
+            var id = new Random().Next(0, Core.Context.Part.Count()) + 1;
+            return (from x in Core.Context.Part where x.id == id select x).First();
+        }
+        public static bool OrderPart(int id, int cc)
+        {
+            var price = (from x in Core.Context.Part where x.id == id select x.price).First();
+            if (price > Core.Context.Account.First().balance)
+                return false;
+            Core.Context.PartPending.Add(new PartPending { id = 0, id_part = id, count = cc, time_remains = 2 });
+            Core.Context.Account.First().balance -= price * cc;
+            Core.Context.SaveChanges();
+            return true;
+        }
+        public static void PendingOrdersStep()
+        {
+            (from x in Core.Context.PartPending where x.time_remains == 1 select x).ToList().ForEach(x => (
+                from y in Core.Context.Part where y.id == x.id_part select y
+            ).First().count += x.count);
+            (from x in Core.Context.PartPending where x.time_remains != 0 select x).ToList().ForEach(x => x.time_remains--);
+            Core.Context.SaveChanges();
+        }
+    };
     internal class Program
     {
-        static Users RegisterLoginInt(bool login)
+        static bool OrderInt()
         {
-            Console.WriteLine("Введите имя пользователя: ");
-            var username = Console.ReadLine();
-            Console.WriteLine("Введите пароль: ");
-            var password = Console.ReadLine();
-            if (!login)
-            {
-                Console.WriteLine("Введите пароль опять: ");
-                if (password != Console.ReadLine())
-                {
-                    Console.WriteLine("Пароли не совпадают.");
-                    return RegisterLoginInt(login);
-                }
-            }
-            Users u;
-            try
-            {
-                u = User.RegisterLogin(username, password, login);
-            }
-            catch (InvalidOperationException)
-            {
-                Console.WriteLine(login ? "Такого пользователя не существует" : "Такой пользователь уже существует");
-                return RegisterLoginInt(login);
-            }
-            if (login && u.passwd != password)
-            {
-                Console.WriteLine("Пароль не подходит.");
-                return RegisterLoginInt(login);
-            }
-            return u;
+            Console.WriteLine("Введите номер части для заказа (или 0):");
+            int ch = Convert.ToInt32(Console.ReadLine());
+            if (ch == 0)
+                return false;
+            Console.WriteLine("Введите количество:");
+            int cc = Convert.ToInt32(Console.ReadLine());
+            if (Warehouse.OrderPart(ch, cc))
+                Console.WriteLine("Деталь заказана.");
+            else
+                Console.WriteLine("Деталь НЕ заказана.");
+            return true;
         }
-        static int? LoggedInAs = null;
-        static int AskInt()
-        {
-            try
-            {
-                return Convert.ToInt32(Console.ReadLine());
-            }
-            catch
-            {
-                return AskInt();
-            }
-        }
-        static void PrintHistory(bool asc)
-        {
-            var b = (
-                from x in Core.Context.Orders
-                join y in Core.Context.OrdersTowarys on x.id equals y.order_id
-                join z in Core.Context.Pvz on x.pvz equals z.id
-                join a in Core.Context.Towary on y.towar_id equals a.id
-                where x.user_id == LoggedInAs
-                select new { x.id, z.location, y.price_fact, a.name }
-            );
-            Console.WriteLine("Заказ\tПВЗ\tЦена товара\tНазвание товар");
-            Console.WriteLine(string.Join("\n",
-                (asc ? b.OrderBy(x => x.id) : b.OrderByDescending(x => x.id))
-                .ToList().Select(x => $"{x.id}\t{x.location}\t{x.price_fact}\t{x.name}")
-            ));
-        }
-        static void PrintItems()
-        {
-            Console.WriteLine("ID\tЦена\tНазвание");
-            Console.WriteLine(string.Join("\n", Core.Context.Towary.ToList().Select(x => $"{x.id}\t{x.price}\t{x.name}")));
-        }
-        static List<int> cart = new List<int>();
-        static void PrintCart(List<int> list)
-        {
-            Console.WriteLine("Цена\tНазвание");
-            Console.WriteLine(string.Join("\n",
-                list.Select(y => (from x in Core.Context.Towary where x.id == y select x).First()).ToList().Select(x => $"{x.price}\t{x.name}")
-            ));
-        }
-        static bool CheckItemExistance(int id)
-        {
-            return (from x in Core.Context.Towary where x.id == id select 1).Count() != 0;
-        }
-        static void CheckoutCart(ref List<int> items, int pvz)
-        {
-            var o = Core.Context.Orders.Add(new Orders { user_id = LoggedInAs.Value, datetime = DateTime.Now, pvz = pvz });
-            foreach (var item in items)
-                Core.Context.OrdersTowarys.Add(new OrdersTowarys
-                {
-                    order_id = o.id,
-                    towar_id = item,
-                    price_fact = (from x in Core.Context.Towary where x.id == item select x.price).First()
-                });
-            Core.Context.SaveChanges();
-            Console.WriteLine("Заказ оформлен.");
-            items.Clear();
-        }
-        static void menu_unauthorized()
-        {
-            Console.WriteLine("1. Войти\n2. Зарегистрироваться\n3. Просмотреть товары");
-            var c = AskInt();
-            switch (c)
-            {
-                case 1:
-                case 2:
-                    LoggedInAs = RegisterLoginInt(c == 1).id;
-                    break;
-                case 3:
-                    PrintItems();
-                    break;
-            }
-        }
-        static void checkout_int(ref List<int> cart)
-        {
-            Console.WriteLine("ID\tМесто");
-            Console.WriteLine(string.Join("\n", Core.Context.Pvz.ToList().Select(x => $"{x.id}\t{x.location}")));
-            Console.WriteLine("Введите номер ПВЗ:");
-            CheckoutCart(ref cart, AskInt());
-        }
-        static void menu_authorized()
-        {
-            Console.WriteLine("1. Просмотреть товары\n2. Добавить в корзину\n3. Купить в один клик\n4. Оформить корзину\n5. Просмотреть корзину\n6. Просмотреть историю покупок");
-            var c = AskInt();
-            switch (c)
-            {
-                case 1:
-                    PrintItems();
-                    break;
-                case 2:
-                case 3:
-                    Console.WriteLine("Введите ID товара:");
-                    var id = AskInt();
-                    if (!CheckItemExistance(id))
-                    {
-                        Console.WriteLine("Нет такого товара.");
-                        return;
-                    }
-                    if (c == 2)
-                        cart.Add(id);
-                    else
-                    {
-                        List<int> cc = new List<int> { id };
-                        checkout_int(ref cc);
-                    }
-                    break;
-                case 4:
-                    checkout_int(ref cart);
-                    break;
-                case 5:
-                    PrintCart(cart);
-                    break;
-                case 6:
-                    Console.WriteLine("1. Отсортировать по возрастанию, 2. По убыванию");
-                    PrintHistory(AskInt() == 1);
-                    break;
-            }
-        }
-
         static void Main(string[] args)
         {
             while (true)
             {
-                if (LoggedInAs != null)
-                    menu_authorized();
-                else
-                    menu_unauthorized();
+                if (Core.Context.Account.First().balance < 0)
+                {
+                    Console.WriteLine("Вы обанкротились.");
+                    return;
+                }
+                Warehouse.PendingOrdersStep();
+                Console.WriteLine($"На счету: {Core.Context.Account.First().balance}");
+                Console.WriteLine(Warehouse.PrintAll());
+                bool canceled = false;
+                while (!canceled)
+                    canceled = !OrderInt();
+                var part = Warehouse.RandomPart();
+                Console.WriteLine($"К вам приехал клиент, у которого отвалился: {part.name} (№{part.id})");
+                var tbp = part.price + 200;
+                Console.WriteLine($"К оплате: {tbp}");
+                Console.WriteLine("Принять? y/n");
+                if (Console.ReadLine() == "n")
+                {
+                    Console.WriteLine("Zа отказ штраф: 100 денег");
+                    Core.Context.Account.First().balance -= 100;
+                    Core.Context.SaveChanges();
+                    continue;
+                }
+                if (part.count == 0)
+                {
+                    Console.WriteLine("Внимание! Запчасти у вас нету, вы поставили случайную!");
+                    var part2 = Warehouse.RandomPart();
+                    int i = 0;
+                    for (; (part2.count == 0 || part2.id == part.id) && i < 50; i++)
+                        part2 = Warehouse.RandomPart();
+                    if (i == 50)
+                    {
+                        Console.WriteLine("Деталей не осталось. Ваша коротка жизнь подошла к концу.");
+                        return;
+                    }
+                    part2.count--;
+                    var lost = part.price * 2;
+                    Console.WriteLine($"Клиент вернулся недовольный и вытянул из вас {lost} денег.");
+                    Core.Context.Account.First().balance -= lost;
+                    Core.Context.SaveChanges();
+                    continue;
+                }
+                part.count--;
+                Core.Context.Account.First().balance += tbp;
+                Core.Context.SaveChanges();
+                Console.WriteLine("Всё идёт по плану.");
             }
         }
     }

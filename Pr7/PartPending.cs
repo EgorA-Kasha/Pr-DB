@@ -12,19 +12,13 @@ namespace Pr7
     using System;
     using System.Collections.Generic;
     
-    public partial class Towary
+    public partial class PartPending
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Towary()
-        {
-            this.OrdersTowarys = new HashSet<OrdersTowarys>();
-        }
-    
         public int id { get; set; }
-        public string name { get; set; }
-        public int price { get; set; }
+        public int id_part { get; set; }
+        public int time_remains { get; set; }
+        public int count { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<OrdersTowarys> OrdersTowarys { get; set; }
+        public virtual Part Part { get; set; }
     }
 }

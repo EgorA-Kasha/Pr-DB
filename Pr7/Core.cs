@@ -8,6 +8,6 @@ namespace Pr7
 {
     internal class Core
     {
-        public static eirineirinEntities Context = new eirineirinEntities();
+        public static Pr7_Adarchenko223Entities Context = new Pr7_Adarchenko223Entities();
     }
 }

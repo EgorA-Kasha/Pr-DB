@@ -12,19 +12,9 @@ namespace Pr7
     using System;
     using System.Collections.Generic;
     
-    public partial class Users
+    public partial class Account
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Users()
-        {
-            this.Orders = new HashSet<Orders>();
-        }
-    
         public int id { get; set; }
-        public string username { get; set; }
-        public string passwd { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Orders> Orders { get; set; }
+        public int balance { get; set; }
     }
 }

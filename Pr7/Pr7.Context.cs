@@ -15,10 +15,10 @@ namespace Pr7
     using System.Data.Entity.Core.Objects;
     using System.Linq;
     
-    public partial class eirineirinEntities : DbContext
+    public partial class Pr7_Adarchenko223Entities : DbContext
     {
-        public eirineirinEntities()
-            : base("name=eirineirinEntities")
+        public Pr7_Adarchenko223Entities()
+            : base("name=Pr7_Adarchenko223Entities")
         {
         }
     
@@ -27,12 +27,9 @@ namespace Pr7
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Orders> Orders { get; set; }
-        public virtual DbSet<OrdersTowarys> OrdersTowarys { get; set; }
-        public virtual DbSet<Pvz> Pvz { get; set; }
-        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
-        public virtual DbSet<Towary> Towary { get; set; }
-        public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<Account> Account { get; set; }
+        public virtual DbSet<Part> Part { get; set; }
+        public virtual DbSet<PartPending> PartPending { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {

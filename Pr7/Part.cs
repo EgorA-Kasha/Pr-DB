@@ -12,22 +12,20 @@ namespace Pr7
     using System;
     using System.Collections.Generic;
     
-    public partial class Orders
+    public partial class Part
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Orders()
+        public Part()
         {
-            this.OrdersTowarys = new HashSet<OrdersTowarys>();
+            this.PartPending = new HashSet<PartPending>();
         }
     
         public int id { get; set; }
-        public int user_id { get; set; }
-        public System.DateTime datetime { get; set; }
-        public int pvz { get; set; }
+        public string name { get; set; }
+        public int price { get; set; }
+        public int count { get; set; }
     
-        public virtual Pvz Pvz1 { get; set; }
-        public virtual Users Users { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<OrdersTowarys> OrdersTowarys { get; set; }
+        public virtual ICollection<PartPending> PartPending { get; set; }
     }
 }

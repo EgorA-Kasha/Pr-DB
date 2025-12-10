@@ -51,74 +51,65 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Account.cs">
+      <DependentUpon>Pr7.tt</DependentUpon>
+    </Compile>
     <Compile Include="Core.cs" />
-    <Compile Include="ModelMarketPlace.Context.cs">
+    <Compile Include="Part.cs">
+      <DependentUpon>Pr7.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PartPending.cs">
+      <DependentUpon>Pr7.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Pr7.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ModelMarketPlace.Context.tt</DependentUpon>
+      <DependentUpon>Pr7.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="ModelMarketPlace.cs">
+    <Compile Include="Pr7.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ModelMarketPlace.tt</DependentUpon>
+      <DependentUpon>Pr7.tt</DependentUpon>
     </Compile>
-    <Compile Include="ModelMarketPlace.Designer.cs">
+    <Compile Include="Pr7.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ModelMarketPlace.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Orders.cs">
-      <DependentUpon>ModelMarketPlace.tt</DependentUpon>
-    </Compile>
-    <Compile Include="OrdersTowarys.cs">
-      <DependentUpon>ModelMarketPlace.tt</DependentUpon>
+      <DependentUpon>Pr7.edmx</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Pvz.cs">
-      <DependentUpon>ModelMarketPlace.tt</DependentUpon>
-    </Compile>
     <Compile Include="sp_helpdiagramdefinition_Result.cs">
-      <DependentUpon>ModelMarketPlace.tt</DependentUpon>
+      <DependentUpon>Pr7.tt</DependentUpon>
     </Compile>
     <Compile Include="sp_helpdiagrams_Result.cs">
-      <DependentUpon>ModelMarketPlace.tt</DependentUpon>
-    </Compile>
-    <Compile Include="sysdiagrams.cs">
-      <DependentUpon>ModelMarketPlace.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Towary.cs">
-      <DependentUpon>ModelMarketPlace.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Users.cs">
-      <DependentUpon>ModelMarketPlace.tt</DependentUpon>
+      <DependentUpon>Pr7.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <EntityDeploy Include="ModelMarketPlace.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>ModelMarketPlace.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="ModelMarketPlace.edmx.diagram">
-      <DependentUpon>ModelMarketPlace.edmx</DependentUpon>
-    </None>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="ModelMarketPlace.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ModelMarketPlace.Context.cs</LastGenOutput>
-      <DependentUpon>ModelMarketPlace.edmx</DependentUpon>
-    </Content>
-    <Content Include="ModelMarketPlace.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ModelMarketPlace.edmx</DependentUpon>
-      <LastGenOutput>ModelMarketPlace.cs</LastGenOutput>
-    </Content>
+    <EntityDeploy Include="Pr7.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Pr7.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Pr7.edmx.diagram">
+      <DependentUpon>Pr7.edmx</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Pr7.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Pr7.edmx</DependentUpon>
+      <LastGenOutput>Pr7.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Pr7.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Pr7.edmx</DependentUpon>
+      <LastGenOutput>Pr7.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
