@@ -113,10 +113,76 @@ namespace Pr7
             Console.WriteLine("Заказ оформлен.");
             items.Clear();
         }
+        static void menu_unauthorized()
+        {
+            Console.WriteLine("1. Войти\n2. Зарегистрироваться\n3. Просмотреть товары");
+            var c = AskInt();
+            switch (c)
+            {
+                case 1:
+                case 2:
+                    LoggedInAs = RegisterLoginInt(c == 1).id;
+                    break;
+                case 3:
+                    PrintItems();
+                    break;
+            }
+        }
+        static void checkout_int(ref List<int> cart)
+        {
+            Console.WriteLine("ID\tМесто");
+            Console.WriteLine(string.Join("\n", Core.Context.Pvz.ToList().Select(x => $"{x.id}\t{x.location}")));
+            Console.WriteLine("Введите номер ПVZ:");
+            CheckoutCart(ref cart, AskInt());
+        }
+        static void menu_authorized()
+        {
+            Console.WriteLine("1. Просмотреть товары\n2. Добавить в корзину\n3. Купить в один клик\n4. Оформить корзину\n5. Просмотреть корзину\n6. Просмотреть историю покупок");
+            var c = AskInt();
+            switch (c)
+            {
+                case 1:
+                    PrintItems();
+                    break;
+                case 2:
+                case 3:
+                    Console.WriteLine("Введите айди товара:");
+                    var id = AskInt();
+                    if (!CheckItemExistance(id))
+                    {
+                        Console.WriteLine("Нет такого товара. Ну дурачьё пошло.");
+                        return;
+                    }
+                    if (c == 2)
+                        cart.Add(id);
+                    else
+                    {
+                        List<int> cc = new List<int> { id };
+                        checkout_int(ref cc);
+                    }
+                    break;
+                case 4:
+                    checkout_int(ref cart);
+                    break;
+                case 5:
+                    PrintCart(cart);
+                    break;
+                case 6:
+                    Console.WriteLine("1. Отсортировать по возрастанию, 2. По убыванию");
+                    PrintHistory(AskInt() == 1);
+                    break;
+            }
+        }
 
         static void Main(string[] args)
         {
-
+            while (true)
+            {
+                if (LoggedInAs != null)
+                    menu_authorized();
+                else
+                    menu_unauthorized();
+            }
         }
     }
 }
