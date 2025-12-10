@@ -132,7 +132,7 @@ namespace Pr7
         {
             Console.WriteLine("ID\tМесто");
             Console.WriteLine(string.Join("\n", Core.Context.Pvz.ToList().Select(x => $"{x.id}\t{x.location}")));
-            Console.WriteLine("Введите номер ПVZ:");
+            Console.WriteLine("Введите номер ПВЗ:");
             CheckoutCart(ref cart, AskInt());
         }
         static void menu_authorized()
@@ -146,11 +146,11 @@ namespace Pr7
                     break;
                 case 2:
                 case 3:
-                    Console.WriteLine("Введите айди товара:");
+                    Console.WriteLine("Введите ID товара:");
                     var id = AskInt();
                     if (!CheckItemExistance(id))
                     {
-                        Console.WriteLine("Нет такого товара. Ну дурачьё пошло.");
+                        Console.WriteLine("Нет такого товара.");
                         return;
                     }
                     if (c == 2)
